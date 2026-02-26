@@ -17,6 +17,7 @@ return {
     filesystem = {
       follow_current_file = { enabled = true },
       window = {
+        position = 'right',
         mappings = {
           ['\\'] = 'close_window',
         },
