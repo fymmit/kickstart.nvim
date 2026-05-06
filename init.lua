@@ -867,8 +867,41 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
+      local parsers = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'javascript',
+        'jsx',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'typescript',
+        'tsx',
+        'vim',
+        'vimdoc',
+      }
+      local filetypes = {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'javascript',
+        'javascriptreact',
+        'typescript',
+        'typescriptreact',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+      }
+      require('nvim-treesitter').install(parsers)
       vim.api.nvim_create_autocmd('FileType', {
         pattern = filetypes,
         callback = function()
@@ -925,6 +958,11 @@ require('lazy').setup({
     },
   },
 })
+
+local get_option = vim.filetype.get_option
+vim.filetype.get_option = function(filetype, option)
+  return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
+end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
