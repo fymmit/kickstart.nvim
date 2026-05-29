@@ -864,52 +864,6 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-  { -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    config = function()
-      local parsers = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'javascript',
-        'jsx',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'typescript',
-        'tsx',
-        'vim',
-        'vimdoc',
-      }
-      local filetypes = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'javascript',
-        'javascriptreact',
-        'typescript',
-        'typescriptreact',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-      }
-      require('nvim-treesitter').install(parsers)
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function()
-          vim.treesitter.start()
-        end,
-      })
-    end,
-  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -958,11 +912,6 @@ require('lazy').setup({
     },
   },
 })
-
-local get_option = vim.filetype.get_option
-vim.filetype.get_option = function(filetype, option)
-  return option == 'commentstring' and require('ts_context_commentstring.internal').calculate_commentstring() or get_option(filetype, option)
-end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
