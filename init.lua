@@ -151,6 +151,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 
+vim.api.nvim_create_user_command('SelectionRef', function()
+  local start_line = vim.fn.line "'<"
+  local end_line = vim.fn.line "'>"
+  local file = vim.fn.expand '%'
+  local ref = string.format('@%s:L%d-L%d', file, start_line, end_line)
+
+  vim.fn.setreg('+', ref)
+  print(ref)
+end, {})
 ---@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
