@@ -635,6 +635,23 @@ require('lazy').setup({
         },
       }
 
+      -- Servers configured outside of Mason still share the common capabilities setup.
+      local standalone_servers = {
+        gdscript = {},
+      }
+
+      local function setup_server(server_name, server)
+        server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
+        if servers[server_name] then
+          require('lspconfig')[server_name].setup(server)
+          return
+        end
+
+        vim.lsp.config(server_name, server)
+        vim.lsp.enable(server_name)
+      end
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -663,11 +680,14 @@ require('lazy').setup({
             -- This handles overriding only values explicitly passed
             -- by the server configuration above. Useful when disabling
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
+            setup_server(server_name, server)
           end,
         },
       }
+
+      for server_name, server in pairs(standalone_servers) do
+        setup_server(server_name, server)
+      end
     end,
   },
 
